@@ -12,7 +12,7 @@ import numpy as np
 import urllib.request
 
 
-
+#从Http获取图片
 def fetchImageFromHttp(image_url, timeout_s=1):
     try:
         if image_url:
@@ -27,18 +27,23 @@ def fetchImageFromHttp(image_url, timeout_s=1):
         return []
 
 
-
+#下载图片并保存
 img = fetchImageFromHttp(
     'https://aminos-callismart.oss-cn-beijing.aliyuncs.com/myai.jpg')
-plt.imsave('img.jpg', img)
-file_path = "img.jpg"
-text = baidu_identify.character_identification(file_path)
 
+#将图片储存在本地
+plt.imsave('img.jpg', img)
+
+file_path = "img.jpg"
+#识别图片中的文字
+text = baidu_identify.character_identification(file_path)
+#返回识别结果
 print(text)
 
+#查找图片
 image_path = new_retrieve.find_image("numbers.txt", text, "good")
 img1 = cv2.imread(file_path, 0)
 img2 = cv2.imread(image_path, 0)
 
 iou_score, similarity_score, pearson_score, adjust = structure_evaluation.preprocessing(img1, img2)
-print(iou_score, similarity_score, pearson_score)
+print(iou_score, similarity_score, pearson_score)#返回多元相似度

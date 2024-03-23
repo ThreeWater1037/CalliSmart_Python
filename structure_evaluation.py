@@ -5,7 +5,7 @@ matplotlib.use('TkAgg')
 import numpy as np
 import math
 from skimage.metrics import structural_similarity as ssim
-from skimage import color, img_as_float
+from skimage import color,img_as_float
 from skimage.exposure import adjust_gamma
 
 
@@ -31,7 +31,7 @@ def img_resize(img, scale_percent):
     # resize image
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
-####图像预处理
+####图像预处理以及轮廓提取
 def preprocessing(img,img1):
     _, thresh = cv2.threshold(img, 1, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     _, thresh1 = cv2.threshold(img1, 1, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
@@ -189,7 +189,7 @@ def preprocessing(img,img1):
                                                     (padding_size[1] - resized_model.shape[1]) / 2)))), 'constant',
                                constant_values=np.array(((0, 0), (0, 0))))
     #print(roi_padding.shape, model_padding.shape)
-    # copy
+    # 复制
     roi_paddingcopy = np.lib.pad(roi_copy, ((int((padding_size[0] - roi.shape[0]) / 2),
                                              int((padding_size[0] - roi.shape[0]) - int(
                                                  (padding_size[0] - roi.shape[0]) / 2))),
@@ -237,6 +237,7 @@ def preprocessing(img,img1):
     image = adjust_gamma(color.gray2rgb(gray_img), 0.65)
     adjust = image.copy()
     red_multiplier = [1, 0.2, 0.2]
+    #调试时用于显示重合部分
     for i in range(len(model_line)):
         adjust[model_line[i][0]][model_line[i][1]] = red_multiplier
     titles = ['roi_pad', 'model_pad', 'border', 'plus', 'adjust', 'substance_']
